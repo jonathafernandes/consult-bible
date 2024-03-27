@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
+import { Button } from './Button';
 
 interface Verse {
     book: {
@@ -25,6 +26,7 @@ export const VerseDetails: React.FC = () => {
 
     const [verses, setVerses] = useState<Verse[]>([]);
     const [loading, setLoading] = useState(true);
+    const [selectedCategory, setSelectedCategory] = useState<'sad' | 'confused' | null>(null);
 
     useEffect(() => {
         const fetchVerseDetails = async () => {
@@ -53,19 +55,46 @@ export const VerseDetails: React.FC = () => {
         fetchVerseDetails();
     }, []);
 
+    const filterVerses = () => {
+        if (!selectedCategory) {
+            return [];
+        }
+
+        if (selectedCategory === 'sad') {
+            return verses.filter(verse => urlsForSad.some(url => url.includes(`${verse.book.name}/${verse.chapter}/${verse.number}`)));
+        }
+
+        if (selectedCategory === 'confused') {
+            return verses.filter(verse => urlsForConfused.some(url => url.includes(`${verse.book.name}/${verse.chapter}/${verse.number}`)));
+        }
+
+        return verses;
+    };
+
     if (loading) {
-        return <div>Carregando...</div>;
+        return <div className='text-center text-sm text-zinc-600'>Carregando...</div>;
     }
 
     return (
-        <div>
-            {verses.map((verse, index) => (
-                <div key={index}>
-                    <h3>{verse.book.name} {verse.chapter}</h3>
-                    <h4>{verse.number}</h4>
-                    <p>{verse.text}</p>
+        <>
+            <div className='flex justify-center items-center gap-4 md:flex-row flex-col'>
+                <h1 className='text-xl text-center font-semibold my-4'>Escrituras para quando eu estiver:</h1>
+                <div className='flex flex-wrap gap-4'>
+                    <Button content='triste' onClick={() => setSelectedCategory('sad')} />
+                    <Button content='confuso' onClick={() => setSelectedCategory('confused')} />
                 </div>
-            ))}
-        </div>
+            </div>
+            {selectedCategory ? (
+                <div className='flex flex-wrap justify-center gap-8 m-8 md:flex-row flex-col items-center'>
+                    {filterVerses().map((verse, index) => (
+                        <div key={index} className='w-full md:w-1/4 pb-3 border-b-[1px] border-solid border-rose-900'>
+                            <h3 className='font-medium'>{verse.book.name} {verse.chapter}</h3>
+                            <span>{verse.number}</span>
+                            <p>{verse.text}</p>
+                        </div>
+                    ))}
+                </div>
+            ) : <div className='mt-20 text-center text-zinc-600 text-sm'>Selecione uma categoria acima</div>}
+        </>
     );
 };
