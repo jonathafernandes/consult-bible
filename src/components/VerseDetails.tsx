@@ -91,8 +91,8 @@ export const VerseDetails: React.FC = () => {
                 </div>
             </div>
             {verse ? (
-                <div className='flex flex-wrap justify-center gap-8 m-8 md:flex-row flex-col items-center'>
-                    <div className='w-full md:w-1/4 pb-3 border-b-[1px] border-solid border-rose-900'>
+                <div className='p-8 my-0 mx-auto w-max-[800px]'>
+                    <div className='w-full pb-3 border-b-[1px] border-solid border-rose-900'>
                         <h3 className='font-medium'>{verse.book.name} {verse.chapter}</h3>
                         <span>{verse.number}</span>
                         <p>{verse.text}</p>
