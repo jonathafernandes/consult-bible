@@ -3,11 +3,12 @@ import React from 'react';
 interface ButtonProps {
     content: string;
     onClick?: () => void;
+    className?: string;
 }
 
-export const Button: React.FC<ButtonProps> = ({content, onClick}) => {
+export const Button: React.FC<ButtonProps> = ({content, onClick, className}) => {
     return (
-        <button className='border-solid border-[1px] border-zinc-300 hover:border-rose-900 py-1 px-2 rounded' onClick={onClick}>
+        <button className={className} onClick={onClick}>
             {content}
         </button>
     );
